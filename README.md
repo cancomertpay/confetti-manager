@@ -1,31 +1,29 @@
-# Confetti Manager
+# Fast Confetti
 
-The **Confetti Manager** class is a powerful and customizable utility for generating various confetti effects on the canvas. It supports multiple styles of confetti like fireworks, stars, circles, squares, and more, and allows users to control the shapes, colors, velocity, and other configurations.
+The **Fast Confetti** class provides a powerful and customizable way to create various confetti effects using `canvas-confetti`. It supports multiple styles of confetti like fireworks, stars, circles, squares, and more, and allows users to configure different attributes such as colors, particle count, velocity, and other options.
 
 ## Features
 
-- **Customizable Effects**: Supports highly customizable confetti effects, allowing users to control colors, shapes, particle count, and more.
-- **Predefined Effects**: Comes with predefined effects like `cannon`, `fireworks`, `snow`, and `pride`.
-- **Infinite Confetti**: Run confetti effects in an infinite loop for a defined duration with interval control.
-- **Custom Canvas Support**: Allows users to specify their own canvas element for the confetti effects.
-- **Delayed Effects**: Supports delayed triggering of confetti effects.
+- **Customizable Effects**: Control the colors, shapes, particle count, velocity, gravity, and more for your confetti effects.
+- **Predefined Effects**: Built-in effects like `cannon`, `fireworks`, `snow`, `pride`, and more.
+- **Infinite Confetti**: Set up continuous confetti effects for a specific duration with adjustable intervals.
+- **Custom Canvas Support**: Render confetti on a custom canvas element, allowing greater flexibility in UI design.
+- **Smooth Reset**: Reset the confetti effects with options for either an instant reset or a smooth fade-out.
 
 ## Installation
 
-You can integrate this class into your project by copying the `Confetti` class and importing the necessary dependencies.
-
 ```bash
-npm install confetti-manager
+npm install fast-confetti 
 ```
 
 ## Usage
 
 ### 1. Basic Usage
 
-You can create a basic confetti effect with default options:
+You can create a basic confetti effect with default options using the `cannon` method:
 
 ```typescript
-import { Confetti } from 'confetti-manager';
+import { Confetti } from './confetti';
 
 const confetti = new Confetti();
 confetti.cannon();
@@ -33,87 +31,113 @@ confetti.cannon();
 
 ### 2. Custom Colors
 
-You can pass an array of custom colors to the `cannon` method:
+You can specify an array of colors for your confetti effect:
 
 ```typescript
-confetti.cannon(['#FF0000', '#00FF00', '#0000FF']);
+confetti.cannon({
+  colors: ['#FF0000', '#00FF00', '#0000FF'],
+});
 ```
 
-### 3. Custom Shapes
+### 3. Fireworks Effect
 
-Confetti can also be generated with custom shapes:
+To trigger a firework-style confetti effect with custom options:
 
 ```typescript
-confetti.customShape(['star', 'circle', '🎉'], ['#FF0000', '#00FF00']);
+confetti.fireworks({
+  colors: ['#FF0000', '#FFFF00'],
+  duration: 10000, // Runs for 10 seconds
+});
 ```
 
-### 4. Fireworks Effect
+### 4. Snow Effect
 
-Trigger a fireworks effect with customizable duration:
+To create a snow-like confetti effect with slow-falling particles:
 
 ```typescript
-confetti.fireworks(['#FF0000', '#FFFF00'], { duration: 10000 });
+confetti.snow({
+  duration: 15000, // Runs for 15 seconds
+});
 ```
 
-### 5. Snow Effect
+### 5. Infinite Confetti
 
-Trigger a slow-falling snow effect:
+You can create an infinite confetti effect, repeating a method at specified intervals:
 
 ```typescript
-confetti.snow();
+confetti.infinite('cannon', 1000, 5000); // Runs for 5 seconds with 1-second intervals
 ```
 
-### 6. Infinite Confetti
+### 6. Pride Effect
 
-Run a confetti effect in an infinite loop for 5 seconds, triggering every 1 second:
+You can trigger a pride-themed confetti effect with rainbow colors:
 
 ```typescript
-confetti.infinite('cannon', 1000, 5000);
+confetti.pride({
+  duration: 15000,
+});
 ```
 
-### 7. Pride Effect
+### 7. Custom Canvas Support
 
-Trigger a pride-themed confetti effect with default rainbow colors:
-
-```typescript
-confetti.pride();
-```
-
-### 8. Custom Canvas
-
-If you want to render confetti on a specific canvas, you can specify it:
+To render the confetti on a specific canvas element:
 
 ```typescript
 const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
 confetti.customCanvas(canvas);
 ```
 
+### 8. Reset Confetti
+
+You can reset the confetti effects with two types of reset:
+
+- **Instant Reset**: Immediately clears the confetti.
+- **Smooth Reset**: Gradually fades out the confetti.
+
+```typescript
+confetti.reset('instant'); // Instant reset
+confetti.reset('smooth', { duration: 2000 }); // Smooth reset over 2 seconds
+```
+
 ## Configuration Options
 
 ### `ConfettiOptions`
 
-The `ConfettiOptions` interface allows you to control the behavior of the confetti effects:
+The `ConfettiOptions` interface allows you to customize the behavior of the confetti effects:
 
-- `colors` (string[]): An array of colors for the confetti.
-- `particleCount` (number): The number of particles to launch.
-- `spread` (number): The spread of the confetti in degrees.
-- `startVelocity` (number): The initial velocity of the confetti particles.
-- `gravity` (number): The gravitational pull on the confetti particles.
-- `decay` (number): The decay rate of the confetti velocity.
-- `ticks` (number): How long the confetti should last.
-- `delay` (number): Delay in milliseconds before the effect starts.
-- `scalar` (number): Scales the size of the confetti shapes.
-- `angle` (number): The angle at which the confetti is launched.
-- `origin` (object): The point on the canvas where the confetti originates.
+- `colors`: An array of colors (hex or RGBA) for the confetti particles.
+- `particleCount`: The number of confetti particles to generate.
+- `spread`: The angle in degrees over which the confetti particles will spread.
+- `startVelocity`: The initial velocity of the confetti particles.
+- `gravity`: The gravitational force affecting the particles.
+- `decay`: The rate at which the particle velocity decays over time.
+- `ticks`: The duration (in frames) for which the confetti should last.
+- `delay`: A delay (in milliseconds) before the effect is triggered.
+- `scalar`: A scaling factor for the size of the confetti particles.
+- `angle`: The launch angle for the confetti particles.
+- `origin`: The starting position of the confetti on the canvas, represented as an object `{ x, y }`.
+
+### `ResetOptions`
+
+The `ResetOptions` interface provides additional configuration options for the smooth reset:
+
+- `duration`: The time (in milliseconds) over which the confetti will fade out.
+- `particleCount`: The number of particles during the fade-out.
+- `ticks`: The lifespan of each confetti particle.
+- `gravity`: The gravitational pull during the fade-out.
+- `colors`: Colors for the particles during the reset.
+- `shapes`: Shapes of the confetti particles during the reset.
 
 ## Available Methods
 
-- `cannon(colors?: string[], options?: ConfettiOptions)`: Fires a basic confetti cannon.
-- `randomDirection(colors?: string[], options?: ConfettiOptions)`: Fires confetti in random directions.
-- `realistic(colors?: string[], options?: ConfettiOptions)`: Creates a realistic confetti burst effect.
-- `fireworks(colors?: string[], options?: FireworksOptions)`: Creates a firework confetti effect.
-- `snow(colors?: string[], options?: SnowOptions)`: Creates a slow-falling snow effect.
-- `pride(colors?: string[], options?: PrideOptions)`: Creates a pride-themed confetti effect.
-- `customShape(shapes: (Shape | string)[], colors?: string[], options?: ConfettiOptions)`: Fires confetti with custom shapes.
-- `customCanvas(canvas: HTMLCanvasElement | null)`: Allows the user to specify a custom canvas element.
-- `infinite(method: string, interval: number, duration: number, options?: ConfettiOptions)`: Runs the specified confetti effect in a loop.
+- **`custom(options?: ConfettiOptions)`**: Fires a highly customizable confetti effect, allowing users to control various parameters such as colors, shapes, and particle count.
+- **`cannon(options?: ConfettiOptions)`**: Fires a basic confetti cannon effect.
+- **`randomDirection(options?: ConfettiOptions)`**: Launches confetti particles in random directions.
+- **`realistic(options?: ConfettiOptions)`**: Creates a realistic burst of confetti with multiple shots.
+- **`fireworks(options?: FireworksOptions)`**: Creates a firework-style confetti effect.
+- **`snow(options?: SnowOptions)`**: Creates a snow-like confetti effect with slow-falling particles.
+- **`pride(options?: PrideOptions)`**: Creates a pride-themed confetti effect.
+- **`fall(options?: ConfettiOptions)`**: Makes confetti particles fall from the top.
+- **`infinite(method: string, interval: number, duration: number, options?: ConfettiOptions)`**: Runs the specified confetti effect in a loop.
+- **`reset(type: string, options?: ResetOptions)`**: Resets the confetti effects either instantly or smoothly.
+- **`customCanvas(canvas: HTMLCanvasElement | null)`**: Renders the confetti on a custom canvas element.

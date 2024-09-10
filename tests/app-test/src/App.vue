@@ -1,13 +1,13 @@
 <template>
   <div class="confetti-settings">
-    <h2>Confetti Effects</h2>
+    <h2>Confetti Effects Tester</h2>
 
     <!-- Option to choose where to display confetti -->
     <div class="input-group">
       <label for="display-mode">Display Mode:</label>
       <select v-model="displayOnCanvas">
-        <option :value="true">Canvas</option>
         <option :value="false">Screen</option>
+        <option :value="true">Canvas</option>
       </select>
     </div>
 
@@ -20,7 +20,15 @@
       <button @click="triggerPride">Pride</button>
       <button @click="triggerStars">Stars</button>
       <button @click="triggerSnow">Snow</button>
-      <button @click="triggerEmoji">Emoji Confetti</button>
+      <button @click="confettiManager.reset('instant')">Reset Instantly</button>
+      <button @click="confettiManager.reset('smooth', { duration: 3000 })">
+        Reset Smooth
+      </button>
+    </div>
+
+    <!-- Button to trigger all effects sequentially -->
+    <div class="test-all">
+      <button @click="testAllEffects">Test All Effects</button>
     </div>
 
     <!-- Always visible canvas for confetti -->
@@ -33,73 +41,74 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { Confetti } from 'confetti-manager/dist/index.mjs';
+<script setup lang="ts">
+import { Confetti } from 'fast-confetti/dist/index.mjs';
+import { ref, watch } from 'vue';
 
-export default defineComponent({
-  setup() {
-    const displayOnCanvas = ref<boolean>(true); // Starts with Canvas mode
-    const confettiCanvas = ref<HTMLCanvasElement | null>(null);
-    const confettiManager = new Confetti();
+const displayOnCanvas = ref<boolean>(false);
+const confettiCanvas = ref<HTMLCanvasElement | null>(null);
+const confettiManager = new Confetti();
 
-    // Watch for display mode changes (Canvas or Screen)
-    watch(displayOnCanvas, (newValue) => {
-      if (newValue && confettiCanvas.value) {
-        // If canvas is selected, use canvas
-        confettiManager.customCanvas(confettiCanvas.value);
-      } else {
-        // If screen is selected, use screen
-        confettiManager.customCanvas(null);
-      }
-    });
-
-    const triggerCannon = () => {
-      confettiManager.infinite("cannon");
-    };
-
-    const triggerRandom = () => {
-      confettiManager.randomDirection();
-    };
-
-    const triggerRealistic = () => {
-      confettiManager.realistic();
-    };
-
-    const triggerFireworks = () => {
-      confettiManager.fireworks();
-    };
-
-    const triggerPride = () => {
-      confettiManager.pride();
-    };
-
-    const triggerStars = () => {
-      confettiManager.stars();
-    };
-
-    const triggerSnow = () => {
-      confettiManager.snow();
-    };
-
-    const triggerEmoji = () => {
-      confettiManager.customShape();
-    };
-
-    return {
-      displayOnCanvas,
-      confettiCanvas,
-      triggerCannon,
-      triggerRandom,
-      triggerRealistic,
-      triggerFireworks,
-      triggerPride,
-      triggerStars,
-      triggerSnow,
-      triggerEmoji,
-    };
-  },
+watch(displayOnCanvas, (newValue) => {
+  if (newValue && confettiCanvas.value) {
+    confettiManager.customCanvas(confettiCanvas.value);
+  } else {
+    confettiManager.customCanvas(null);
+  }
 });
+
+const triggerCannon = () => {
+  confettiManager.cannon({
+    colors: ['#FCFCFC', '#000000'],
+  });
+};
+
+const triggerRandom = () => {
+  confettiManager.randomDirection({
+    colors: ['#FCFCFC', '#000000'],
+  });
+};
+
+const triggerRealistic = () => {
+  confettiManager.realistic({
+    colors: ['#FCFCFC', '#000000'],
+  });
+};
+
+const triggerFireworks = () => {
+  confettiManager.fireworks({
+    duration: 5000, 
+  });
+};
+
+const triggerPride = () => {
+  confettiManager.pride({
+    duration: 5000, 
+  });
+};
+
+const triggerStars = () => {
+  confettiManager.stars({
+    colors: ['#FFD700', '#FFFFFF'],
+  });
+};
+
+const triggerSnow = () => {
+  confettiManager.snow({
+    colors: ['#FCFCFC'],
+    duration: 6000,
+    delay: 5000
+  });
+};
+
+const testAllEffects = () => {
+  confettiManager.cannon({ delay: 0 });
+  confettiManager.randomDirection({ delay: 1000 });
+  confettiManager.realistic({ delay: 2000 });
+  confettiManager.pride({ delay: 3000, duration: 3000 });
+  confettiManager.fireworks({ delay: 6000, duration: 3000 });
+  confettiManager.snow({ delay: 9000, duration: 3000 });
+};
 </script>
 
 <style scoped>
@@ -113,6 +122,10 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.test-all {
+  margin-top: 20px;
 }
 
 button {
