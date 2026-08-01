@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Confetti } from 'fast-confetti/dist/index.mjs';
+import { Confetti } from 'fast-confetti';
 import { ref, watch } from 'vue';
 
 const displayOnCanvas = ref<boolean>(false);

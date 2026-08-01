@@ -1,14 +1,16 @@
 {
-  "name": "app-test",
+  "name": "fast-confetti-vue-example",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Vue 3 playground for fast-confetti.",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "fast-confetti": "file:../..",
     "vue": "^3.4.37"
   },
   "devDependencies": {

@@ -11,3 +11,6 @@ dist/
 
 # Ignore TypeScript cache and build files
 *.tsbuildinfo
+
+# Ignore test coverage output
+coverage/

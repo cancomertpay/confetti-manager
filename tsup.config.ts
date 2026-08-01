@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 
 export default defineConfig({
-  name: 'Finoku Library Build',
+  name: 'fast-confetti',
   entry: ['src/index.ts'],
   format: ['cjs', 'esm'],
   dts: true,

@@ -30,7 +30,8 @@
   },
   "include": ["src/**/*" /* Path to included files */],
   "exclude": [
-    "tests/**/*" /* Path to exluded files */,
+    "tests/**/*" /* Path to excluded files */,
+    "examples/**/*",
     "node_modules/**/*",
     "coverage/**/*"
   ]

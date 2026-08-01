@@ -1,37 +1,57 @@
-# Fast Confetti
+# fast-confetti
 
-The **Fast Confetti** class provides a powerful and customizable way to create various confetti effects using `canvas-confetti`. It supports multiple styles of confetti like fireworks, stars, circles, squares, and more, and allows users to configure different attributes such as colors, particle count, velocity, and other options.
+[![npm version](https://img.shields.io/npm/v/fast-confetti.svg)](https://www.npmjs.com/package/fast-confetti)
+
+Customizable confetti effects for the web — cannon, fireworks, stars, snow, pride and more.
+TypeScript-first, built on top of [`canvas-confetti`](https://github.com/catdad/canvas-confetti).
+
+**Live demo:** [Memory Game](https://memory-game-by-cc.vercel.app) — a Vue 3 app using this package.
 
 ## Features
 
-- **Customizable Effects**: Control the colors, shapes, particle count, velocity, gravity, and more for your confetti effects.
-- **Predefined Effects**: Built-in effects like `cannon`, `fireworks`, `snow`, `pride`, and more.
-- **Infinite Confetti**: Set up continuous confetti effects for a specific duration with adjustable intervals.
-- **Custom Canvas Support**: Render confetti on a custom canvas element, allowing greater flexibility in UI design.
-- **Smooth Reset**: Reset the confetti effects with options for either an instant reset or a smooth fade-out.
+- **Predefined effects** — `cannon`, `fireworks`, `stars`, `snow`, `pride`, `fall`, `realistic`, `randomDirection`
+- **Fully customizable** — colors, shapes, particle count, velocity, gravity, spread, origin and more
+- **Looping effects** — repeat any effect at a set interval for a set duration
+- **Custom canvas** — render onto your own `<canvas>` element instead of the full page
+- **Two reset modes** — clear instantly, or fade out smoothly
+- **Typed** — written in TypeScript, ships with its own declarations
+- **ESM + CJS** — works with modern bundlers and with `require()`
 
 ## Installation
 
 ```bash
-npm install fast-confetti 
+npm install fast-confetti
 ```
 
-## Usage
+```bash
+pnpm add fast-confetti
+```
 
-### 1. Basic Usage
+```bash
+yarn add fast-confetti
+```
 
-You can create a basic confetti effect with default options using the `cannon` method:
+## Quick start
 
 ```typescript
-import { Confetti } from './confetti';
+import { Confetti } from 'fast-confetti';
 
 const confetti = new Confetti();
 confetti.cannon();
 ```
 
-### 2. Custom Colors
+You can also pass defaults to the constructor — they apply to every effect on that instance:
 
-You can specify an array of colors for your confetti effect:
+```typescript
+const confetti = new Confetti({
+  colors: ['#FF0000', '#00FF00', '#0000FF'],
+  particleCount: 150,
+});
+```
+
+## Usage
+
+### Custom colors
 
 ```typescript
 confetti.cannon({
@@ -39,38 +59,32 @@ confetti.cannon({
 });
 ```
 
-### 3. Fireworks Effect
-
-To trigger a firework-style confetti effect with custom options:
+### Fireworks
 
 ```typescript
 confetti.fireworks({
   colors: ['#FF0000', '#FFFF00'],
-  duration: 10000, // Runs for 10 seconds
+  duration: 10000, // runs for 10 seconds
 });
 ```
 
-### 4. Snow Effect
-
-To create a snow-like confetti effect with slow-falling particles:
+### Snow
 
 ```typescript
 confetti.snow({
-  duration: 15000, // Runs for 15 seconds
+  duration: 15000, // runs for 15 seconds
 });
 ```
 
-### 5. Infinite Confetti
+### Looping an effect
 
-You can create an infinite confetti effect, repeating a method at specified intervals:
+Repeat any effect at a given interval for a given duration:
 
 ```typescript
-confetti.infinite('cannon', 1000, 5000); // Runs for 5 seconds with 1-second intervals
+confetti.infinite('cannon', 1000, 5000); // every 1s, for 5s
 ```
 
-### 6. Pride Effect
-
-You can trigger a pride-themed confetti effect with rainbow colors:
+### Pride
 
 ```typescript
 confetti.pride({
@@ -78,66 +92,95 @@ confetti.pride({
 });
 ```
 
-### 7. Custom Canvas Support
+### Delaying an effect
 
-To render the confetti on a specific canvas element:
+Every effect accepts a `delay` (milliseconds) before it fires:
+
+```typescript
+confetti.stars({ delay: 500 });
+```
+
+### Custom canvas
+
+Render onto your own canvas instead of the full page:
 
 ```typescript
 const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
 confetti.customCanvas(canvas);
+confetti.cannon();
 ```
 
-### 8. Reset Confetti
-
-You can reset the confetti effects with two types of reset:
-
-- **Instant Reset**: Immediately clears the confetti.
-- **Smooth Reset**: Gradually fades out the confetti.
+Pass `null` to go back to full-page rendering:
 
 ```typescript
-confetti.reset('instant'); // Instant reset
-confetti.reset('smooth', { duration: 2000 }); // Smooth reset over 2 seconds
+confetti.customCanvas(null);
 ```
 
-## Configuration Options
+### Resetting
+
+```typescript
+confetti.reset('instant');                     // clear immediately
+confetti.reset('smooth', { duration: 2000 });  // fade out over 2 seconds
+```
+
+## API
+
+### Methods
+
+| Method | Description |
+| --- | --- |
+| `cannon(options?)` | Basic confetti burst. |
+| `realistic(options?)` | Layered burst built from several shots — the most natural looking effect. |
+| `randomDirection(options?)` | Fires with randomised count, spread and angle. |
+| `fireworks(options?)` | Repeating firework bursts from both sides of the screen. |
+| `stars(options?)` | Star-shaped particles in gold tones. |
+| `snow(options?)` | Slow-falling particles drifting across the screen. |
+| `pride(options?)` | Streams fired from the left and right edges. |
+| `fall(options?)` | Particles falling from the top across the full width. Supports text shapes. |
+| `custom(options?)` | Fires a single burst using only the options you pass. |
+| `infinite(method, interval?, duration?, options?)` | Repeats the given method every `interval` ms for `duration` ms. Defaults: `1000`, `5000`. |
+| `reset(type?, options?)` | `'instant'` clears at once, `'smooth'` (default) fades out. |
+| `customCanvas(canvas)` | Renders onto the given `HTMLCanvasElement`, or `null` to reset to full page. |
 
 ### `ConfettiOptions`
 
-The `ConfettiOptions` interface allows you to customize the behavior of the confetti effects:
+Extends [`canvas-confetti`'s `Options`](https://github.com/catdad/canvas-confetti#options) and adds `shapes`, `delay` and `duration`.
 
-- `colors`: An array of colors (hex or RGBA) for the confetti particles.
-- `particleCount`: The number of confetti particles to generate.
-- `spread`: The angle in degrees over which the confetti particles will spread.
-- `startVelocity`: The initial velocity of the confetti particles.
-- `gravity`: The gravitational force affecting the particles.
-- `decay`: The rate at which the particle velocity decays over time.
-- `ticks`: The duration (in frames) for which the confetti should last.
-- `delay`: A delay (in milliseconds) before the effect is triggered.
-- `scalar`: A scaling factor for the size of the confetti particles.
-- `angle`: The launch angle for the confetti particles.
-- `origin`: The starting position of the confetti on the canvas, represented as an object `{ x, y }`.
+| Option | Type | Description |
+| --- | --- | --- |
+| `colors` | `string[]` | Particle colors (hex or RGBA). |
+| `particleCount` | `number` | Number of particles to emit. |
+| `spread` | `number` | Spread angle in degrees. |
+| `startVelocity` | `number` | Initial particle velocity. |
+| `gravity` | `number` | Gravitational pull applied to particles. |
+| `decay` | `number` | How quickly velocity decays. |
+| `ticks` | `number` | Particle lifetime in frames. |
+| `scalar` | `number` | Particle size multiplier. |
+| `angle` | `number` | Launch angle in degrees. |
+| `origin` | `{ x: number; y: number }` | Launch position, relative to the canvas (`0`–`1`). |
+| `shapes` | `Shape[]` | Particle shapes — `'circle'`, `'square'`, `'star'`. |
+| `delay` | `number` | Milliseconds to wait before firing. |
+| `duration` | `number` | How long timed effects run, in milliseconds. |
 
 ### `ResetOptions`
 
-The `ResetOptions` interface provides additional configuration options for the smooth reset:
+Used by `reset('smooth', options)`: `duration`, `particleCount`, `ticks`, `gravity`, `colors`, `shapes`.
 
-- `duration`: The time (in milliseconds) over which the confetti will fade out.
-- `particleCount`: The number of particles during the fade-out.
-- `ticks`: The lifespan of each confetti particle.
-- `gravity`: The gravitational pull during the fade-out.
-- `colors`: Colors for the particles during the reset.
-- `shapes`: Shapes of the confetti particles during the reset.
+## Example
 
-## Available Methods
+A Vue 3 playground lives in [`examples/vue`](./examples/vue). It links the local
+package, so you can try changes without publishing:
 
-- **`custom(options?: ConfettiOptions)`**: Fires a highly customizable confetti effect, allowing users to control various parameters such as colors, shapes, and particle count.
-- **`cannon(options?: ConfettiOptions)`**: Fires a basic confetti cannon effect.
-- **`randomDirection(options?: ConfettiOptions)`**: Launches confetti particles in random directions.
-- **`realistic(options?: ConfettiOptions)`**: Creates a realistic burst of confetti with multiple shots.
-- **`fireworks(options?: FireworksOptions)`**: Creates a firework-style confetti effect.
-- **`snow(options?: SnowOptions)`**: Creates a snow-like confetti effect with slow-falling particles.
-- **`pride(options?: PrideOptions)`**: Creates a pride-themed confetti effect.
-- **`fall(options?: ConfettiOptions)`**: Makes confetti particles fall from the top.
-- **`infinite(method: string, interval: number, duration: number, options?: ConfettiOptions)`**: Runs the specified confetti effect in a loop.
-- **`reset(type: string, options?: ResetOptions)`**: Resets the confetti effects either instantly or smoothly.
-- **`customCanvas(canvas: HTMLCanvasElement | null)`**: Renders the confetti on a custom canvas element.
+```bash
+npm install && npm run build
+cd examples/vue && npm install && npm run dev
+```
+
+## Requirements
+
+Runs in the browser — it relies on `requestAnimationFrame` and `<canvas>`.
+In SSR frameworks (Nuxt, Next.js) create the instance on the client side only.
+
+## License
+
+MIT © Can Cömertpay

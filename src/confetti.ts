@@ -5,7 +5,7 @@ import {
   PrideOptions,
   ResetOptions,
   SnowOptions,
-} from '../models';
+} from './types';
 
 /**
  * A class to manage and trigger different confetti effects.
@@ -364,7 +364,7 @@ export class Confetti {
   ): void {
     const duration = options.duration || 2000;
 
-    // Tüm requestAnimationFrame animasyonlarını durdur
+    // Stop all requestAnimationFrame-driven animations
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
